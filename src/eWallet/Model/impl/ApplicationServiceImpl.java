@@ -7,14 +7,13 @@ import java.util.Scanner;
 
 public class ApplicationServiceImpl implements ApplicationService {
 
-         private final Scanner scanner = new Scanner(System.in);
-
-         private  AccountService accountService= new AccountServiceImp();
+    private final Scanner scanner = new Scanner(System.in);
+    private AccountService accountService = new AccountServiceImp();
 
     @Override
     public void start() {
         System.out.println("Welcome to eWallet System");
-        int attempts = 0; // Track the number of invalid input attempts
+        int attempts = 0; // Track the number of invalid menu selections
 
         while (true) {
             System.out.println("Hi, you have multiple options:\n"
@@ -23,73 +22,77 @@ public class ApplicationServiceImpl implements ApplicationService {
                     + "3) Exit and logout\n"
                     + "Please insert the number that represents your wanted action!");
 
-            //  Issue: If the user enters a string instead of a number, the program used to run forever
-            //  Fix: Check if input is an integer first
+            // Ensure user enters a valid integer
             if (!scanner.hasNextInt()) {
                 System.out.println("Invalid input! Please enter a number.");
-                scanner.next(); //  Consume the invalid input (to avoid infinite loop)
-                attempts++; //  Count invalid attempts
-                if (attempts >= 4) { // If 4 incorrect attempts, exit the program :)
+                scanner.next(); // Consume invalid input
+                attempts++; // Increase failed attempt count
+                if (attempts >= 4) {
                     System.out.println("Too many invalid attempts. Exiting...");
-                    break;
+                    return; // Exit the program completely
                 }
-                continue; // Restart the loop and ask for input again
+                continue; // Restart loop
             }
 
-            int choice = scanner.nextInt(); //  Read user input (integer)
-            scanner.nextLine(); //  Consume leftover newline character (prevents skipping input in login/createAccount)
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume leftover newline
 
             switch (choice) {
                 case 1:
-                    login();  // Call login method
-                    attempts = 0; //  Reset attempts after a successful action
+                    if (login()) { // If login is successful, exit start() and go to mainPage()
+                        return;
+                    }
                     break;
                 case 2:
-                    createAccount();  // Call createAccount method
-                    attempts = 0; //  Reset attempts after a successful action
+                    createAccount();
                     break;
                 case 3:
                     System.out.println("Thank you for using eWallet System");
-                    return; //  Exit the program properly
-                           // why return? It exits the entire method immediately
+                    return; // Exit the program properly
                 default:
                     System.out.println("Invalid choice! Please select a valid number.");
-                    attempts++; //  Increase invalid attempt count due to invalid choice
+                    attempts++; // Track invalid menu attempts
                     break;
             }
-            //  Issue: Previously, the program didn’t exit after too many invalid choices / only exits by choosing exit!
-            //  Fixed: Added max attempts limit
+
             if (attempts >= 4) {
                 System.out.println("Too many invalid attempts. Exiting...");
-                break;
+                return; // Exit the program completely
+            }
+        }
+    }
+
+    private boolean login() {
+        int loginAttempts = 0; // Track failed login attempts
+
+        while (loginAttempts < 4) {
+            System.out.println("Please enter your username:");
+            String username = scanner.nextLine();
+
+            System.out.println("Please enter your password:");
+            String password = scanner.nextLine();
+
+            Account account = new Account(username, password);
+
+            if (accountService.findAccount(account)) {
+                System.out.println("Login successful! Redirecting to main page...");
+                mainPage(account);
+                return true; // Exit start() and prevent looping back
+            } else {
+                System.out.println("Invalid username or password. Please try again.");
+                loginAttempts++; // Increase login attempt count
             }
         }
 
-        scanner.close(); // ✅ Close scanner properly when exiting the program
-    }
-    private void login() {
-        System.out.println("Please enter your username");
-        String username = scanner.nextLine(); // Removed extra scanner.nextLine()
-
-        System.out.println("Please enter your password");
-        String password = scanner.nextLine();
-
-        Account account = new Account(username, password);
-
-        boolean existingAccount = accountService.findAccount(account);
-        if (existingAccount) {
-            mainPage(account);
-        } else {
-            System.out.println("Invalid username or password");
-        }
-
+        System.out.println("Too many failed login attempts. Exiting...");
+        return false; // Failed login, so return false to keep running start()
     }
 
     private void createAccount() {
-        System.out.println("Please enter your username");
-        String username = scanner.nextLine(); // Removed extra scanner.nextLine()
+        System.out.println("Please enter your username:");
+        String username = scanner.nextLine();
 
-        System.out.println("Please enter your password");
+        System.out.println("Please enter your password:");
         String password = scanner.nextLine();
 
         if (username.isEmpty() || password.isEmpty()) {
@@ -101,14 +104,14 @@ public class ApplicationServiceImpl implements ApplicationService {
         boolean result = accountService.createAccount(account);
 
         if (result) {
-            System.out.println("Account created successfully");
+            System.out.println("Account created successfully. You can now log in.");
         } else {
             System.out.println("Account creation failed. Username may already exist.");
         }
     }
 
-    private void mainPage(Account account){
-        System.out.println("Welcome "+account.getUsername());
+    private void mainPage(Account account) {
+        System.out.println("Welcome " + account.getUsername());
         System.out.println("You have multiple options:\n"
                 + "1) Deposit\n"
                 + "2) Withdraw\n"
