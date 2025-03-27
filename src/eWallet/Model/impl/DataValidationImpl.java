@@ -34,5 +34,4 @@ public class DataValidationImpl implements DataValidation {
         }
         return true;
     }
-
 }

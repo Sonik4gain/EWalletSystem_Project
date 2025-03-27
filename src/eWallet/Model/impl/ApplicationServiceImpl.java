@@ -8,7 +8,9 @@ import java.util.Scanner;
 public class ApplicationServiceImpl implements ApplicationService {
 
     private final Scanner scanner = new Scanner(System.in);
+
     private AccountService accountService = new AccountServiceImp();
+    private DataValidation dataValidation= new DataValidationImpl(); // data validation object
 
     @Override
     public void start() {
@@ -99,7 +101,6 @@ public class ApplicationServiceImpl implements ApplicationService {
             System.out.println("Username and password cannot be empty.");
             return;
         }
-
         Account account = new Account(username, password);
         boolean result = accountService.createAccount(account);
 
@@ -120,3 +121,5 @@ public class ApplicationServiceImpl implements ApplicationService {
                 + "Please insert the number that represents your wanted action!");
     }
 }
+
+
