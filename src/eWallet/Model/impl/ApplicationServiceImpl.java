@@ -129,12 +129,15 @@ public class ApplicationServiceImpl implements ApplicationService {
 //                + "3) Transfer\n"
 //                + "4) Logout\n"
 //                + "Please insert the number that represents your wanted action!");
+
+        //TODO : Replace with loop + validation logic
         System.out.println("1) Deposit\n2) Withdraw\n3) Transfer\n4) Logout"); // not sure to leave this like this or not
-        int choice = scanner.nextInt(); // get user choice
+        int choice = scanner.nextInt();
         scanner.nextLine();
 
-        switch (choice) { // switch case to check the user choice
+        switch (choice) {
             case 1:
+                // TODO: Replace with loop + validation logic
                 System.out.print("Enter amount to deposit: ");
                 double deposit = scanner.nextDouble();
                 account.deposit(deposit);
@@ -142,8 +145,13 @@ public class ApplicationServiceImpl implements ApplicationService {
                 break;
 
             case 2:
+                // TODO: Replace with loop + validation logic
                 System.out.print("Enter amount to withdraw: ");
                 double withdraw = scanner.nextDouble();
+                if (withdraw < 0) {
+                    System.out.println("Withdraw amount should be positive");
+                    return;
+                }
                 if (account.withdraw(withdraw)) {
                     System.out.println("Withdrawal successful. New balance: $" + account.getBalance());
                 } else {
@@ -152,12 +160,11 @@ public class ApplicationServiceImpl implements ApplicationService {
                 break;
 
             case 3:
-                // Future: Transfer logic here
                 System.out.println("Transfer feature not yet implemented.");
                 break;
 
             case 4:
-                return; // logout
+                return;
             default:
                 System.out.println("Invalid option.");
         }
