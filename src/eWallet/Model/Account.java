@@ -4,6 +4,7 @@ public class Account {
     private String username;
     private String password;
     private boolean active;
+    private double balance = 0.0;
 
     public Account() {
     }
@@ -12,6 +13,20 @@ public class Account {
         this.username = username;
         this.password = password;
         this.active = true;
+    }
+
+    public double getBalance() { return balance; }
+    public void setBalance(double balance) { this.balance = balance; }
+
+    public void deposit(double amount) {
+        if (amount > 0) this.balance += amount;
+    }
+    public boolean withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            this.balance -= amount;
+            return true;
+        }
+        return false;
     }
 
     public String getUsername() {
@@ -37,4 +52,6 @@ public class Account {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+
 }

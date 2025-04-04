@@ -8,8 +8,8 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        ApplicationServiceImpl ApplicationService = new ApplicationServiceImpl();
-        ApplicationService.start();
+        ApplicationServiceImpl appService = new ApplicationServiceImpl();
+        appService.start();
 
 
     }

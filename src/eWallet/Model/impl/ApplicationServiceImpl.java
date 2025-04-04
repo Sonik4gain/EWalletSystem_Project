@@ -97,6 +97,11 @@ public class ApplicationServiceImpl implements ApplicationService {
         System.out.println("Please enter your password:");
         String password = scanner.nextLine();
 
+        if (username.isEmpty() || password.isEmpty()) { // this method is to check if the username and password are empty
+            System.out.println("Username and password cannot be empty."); // also this method should be first to run, learned this from the last time.
+            return;
+        }
+
         if (!dataValidation.validateUsername(username)) { // this method is to check if the username is valid
             System.out.println("Username must start with uppercase and be at least 3 characters.");
             return;
@@ -105,10 +110,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             return; // no need to print anything here, the validation method already prints the error
         }
 
-        if (username.isEmpty() || password.isEmpty()) { // this method is to check if the username and password are empty
-            System.out.println("Username and password cannot be empty.");
-            return;
-        }
+
         Account account = new Account(username, password);
         boolean result = accountService.createAccount(account);
 
@@ -121,13 +123,46 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     private void mainPage(Account account) {
         System.out.println("Welcome " + account.getUsername());
-        System.out.println("You have multiple options:\n"
-                + "1) Deposit\n"
-                + "2) Withdraw\n"
-                + "3) Transfer\n"
-                + "4) Logout\n"
-                + "Please insert the number that represents your wanted action!");
+//        System.out.println("Which action do you prefer?\n"
+//                + "1) Deposit\n"
+//                + "2) Withdraw\n"
+//                + "3) Transfer\n"
+//                + "4) Logout\n"
+//                + "Please insert the number that represents your wanted action!");
+        System.out.println("1) Deposit\n2) Withdraw\n3) Transfer\n4) Logout"); // not sure to leave this like this or not
+        int choice = scanner.nextInt(); // get user choice
+        scanner.nextLine();
+
+        switch (choice) { // switch case to check the user choice
+            case 1:
+                System.out.print("Enter amount to deposit: ");
+                double deposit = scanner.nextDouble();
+                account.deposit(deposit);
+                System.out.println("New balance: $" + account.getBalance());
+                break;
+
+            case 2:
+                System.out.print("Enter amount to withdraw: ");
+                double withdraw = scanner.nextDouble();
+                if (account.withdraw(withdraw)) {
+                    System.out.println("Withdrawal successful. New balance: $" + account.getBalance());
+                } else {
+                    System.out.println("Insufficient funds.");
+                }
+                break;
+
+            case 3:
+                // Future: Transfer logic here
+                System.out.println("Transfer feature not yet implemented.");
+                break;
+
+            case 4:
+                return; // logout
+            default:
+                System.out.println("Invalid option.");
+        }
     }
+
 
     private Account extractAccount(){
         System.out.println("please enter your name");
