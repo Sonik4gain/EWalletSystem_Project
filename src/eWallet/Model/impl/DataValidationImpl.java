@@ -17,21 +17,29 @@ public class DataValidationImpl implements DataValidation {
 
     @Override
     public boolean validatePassword(String password) {
-        char ch;
         // ToDO: check if password Size >=6 and must contain number, upper char , lower char and special char.
-        if (password.length() < 6 ) {
-            System.out.println("Password must be at least 6 characters long");
+        boolean hasUpper = false; // we make this true if we find an upper case letter
+        boolean hasLower = false; // we make this true if we find a lower case letter
+        boolean hasDigit = false; // we make this true if we find a digit
+        boolean hasSpecial = false; // finally we make this true if we find a special character
+        if (password.length() < 6) { // this is for checking the length of the password
+            System.out.println("Password must be at least 6 characters long.");
             return false;
         }
-        for (int i =0; i < password.length(); i++){
-            ch = password.charAt(i);
-            if (Character.isDigit(ch) && Character.isUpperCase(ch) && Character.isLowerCase(ch)){
-                return true;
-            }
-            else {
-                return false;
-           }
+        for (char ch : password.toCharArray()) { // we use password.toCharArray() to convert the password into a char array then we check using advanced for loop (the one used in arrays most of the time)
+            if (Character.isUpperCase(ch)) hasUpper = true;
+            else if (Character.isLowerCase(ch)) hasLower = true;
+            else if (Character.isDigit(ch)) hasDigit = true;
+            else hasSpecial = true;
         }
-        return true;
+
+        if (!hasUpper) System.out.println("Password must contain at least one uppercase letter.");
+        if (!hasLower) System.out.println("Password must contain at least one lowercase letter.");
+        if (!hasDigit) System.out.println("Password must contain at least one digit.");
+        if (!hasSpecial) System.out.println("Password must contain at least one special character.");
+
+        // Return true only if all conditions are met
+        return hasUpper && hasLower && hasDigit && hasSpecial;
+
     }
 }

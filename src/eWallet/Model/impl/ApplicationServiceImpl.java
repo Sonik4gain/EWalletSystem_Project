@@ -97,7 +97,15 @@ public class ApplicationServiceImpl implements ApplicationService {
         System.out.println("Please enter your password:");
         String password = scanner.nextLine();
 
-        if (username.isEmpty() || password.isEmpty()) {
+        if (!dataValidation.validateUsername(username)) { // this method is to check if the username is valid
+            System.out.println("Username must start with uppercase and be at least 3 characters.");
+            return;
+        }
+        if (!dataValidation.validatePassword(password)) { // this method is to check if the password is valid
+            return; // no need to print anything here, the validation method already prints the error
+        }
+
+        if (username.isEmpty() || password.isEmpty()) { // this method is to check if the username and password are empty
             System.out.println("Username and password cannot be empty.");
             return;
         }
@@ -119,6 +127,18 @@ public class ApplicationServiceImpl implements ApplicationService {
                 + "3) Transfer\n"
                 + "4) Logout\n"
                 + "Please insert the number that represents your wanted action!");
+    }
+
+    private Account extractAccount(){
+        System.out.println("please enter your name");
+        String userName= scanner.nextLine();
+        // want to create another layer of username validation
+        System.out.println("please enter your password");
+        String password= scanner.nextLine();
+        //want to create another layer of validation
+
+        return new Account(userName,password);
+
     }
 }
 
