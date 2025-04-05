@@ -1,5 +1,7 @@
 package eWallet.Model.impl;
 
+import eWallet.Model.Interfaces.DataValidation;
+
 public class DataValidationImpl implements DataValidation {
     @Override
     public boolean validateUsername(String username) {

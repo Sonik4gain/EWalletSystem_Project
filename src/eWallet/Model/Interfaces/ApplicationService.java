@@ -1,4 +1,4 @@
-package eWallet.Model;
+package eWallet.Model.Interfaces;
 
 public interface ApplicationService {
 

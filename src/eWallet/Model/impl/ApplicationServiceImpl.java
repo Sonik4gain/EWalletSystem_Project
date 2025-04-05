@@ -1,7 +1,9 @@
 package eWallet.Model.impl;
 
-import eWallet.Model.Account;
-import eWallet.Model.ApplicationService;
+import eWallet.Model.impl.Account;
+import eWallet.Model.Interfaces.ApplicationService;
+import eWallet.Model.Interfaces.AccountService;
+import eWallet.Model.Interfaces.DataValidation;
 
 import java.util.Scanner;
 
@@ -122,53 +124,88 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     private void mainPage(Account account) {
-        System.out.println("Welcome " + account.getUsername());
-//        System.out.println("Which action do you prefer?\n"
-//                + "1) Deposit\n"
-//                + "2) Withdraw\n"
-//                + "3) Transfer\n"
-//                + "4) Logout\n"
-//                + "Please insert the number that represents your wanted action!");
+        System.out.println("Welcome " + account.getUsername() + " your current balance is: $" + account.getBalance());
 
-        //TODO : Replace with loop + validation logic
-        System.out.println("1) Deposit\n2) Withdraw\n3) Transfer\n4) Logout"); // not sure to leave this like this or not
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        while (true) {
+            System.out.println("\nWhich action do you prefer?");
+            System.out.println("1) Deposit");
+            System.out.println("2) Withdraw");
+            System.out.println("3) Transfer (Coming Soon)");
+            System.out.println("4) Logout");
 
-        switch (choice) {
-            case 1:
-                // TODO: Replace with loop + validation logic
-                System.out.print("Enter amount to deposit: ");
-                double deposit = scanner.nextDouble();
-                account.deposit(deposit);
-                System.out.println("New balance: $" + account.getBalance());
-                break;
+            if (!scanner.hasNextInt()) {
+                System.out.println("Invalid input. Please enter a number between 1 and 4.");
+                scanner.next(); // Consume the invalid input
+                continue;
+            }
 
-            case 2:
-                // TODO: Replace with loop + validation logic
-                System.out.print("Enter amount to withdraw: ");
-                double withdraw = scanner.nextDouble();
-                if (withdraw < 0) {
-                    System.out.println("Withdraw amount should be positive");
-                    return;
-                }
-                if (account.withdraw(withdraw)) {
-                    System.out.println("Withdrawal successful. New balance: $" + account.getBalance());
-                } else {
-                    System.out.println("Insufficient funds.");
-                }
-                break;
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
 
-            case 3:
-                System.out.println("Transfer feature not yet implemented.");
-                break;
-
-            case 4:
-                return;
-            default:
-                System.out.println("Invalid option.");
+            switch (choice) {
+                case 1:
+                    handleDeposit(account); // Deposit method
+                    break;
+                case 2:
+                    handleWithdraw(account); // Withdraw method
+                    break;
+                case 3:
+                    System.out.println("Transfer feature not yet implemented.");
+                    break;
+                case 4:
+                    System.out.println("Logging out...");
+                    return; // Exit the mainPage
+                default:
+                    System.out.println("Invalid option. Please choose a number between 1 and 4.");
+            }
         }
     }
+    // it is better if functions have separate methods.
+    private void handleDeposit(Account account) {
+        while (true) {
+            System.out.print("Enter amount to deposit: ");
+            if (!scanner.hasNextDouble()) {
+                System.out.println("Invalid input. Please enter a numeric value.");
+                scanner.next(); // Clear the invalid input
+                continue;
+            }
+
+            double deposit = scanner.nextDouble();
+            scanner.nextLine(); // Clear the newline
+
+            if (deposit <= 0 || deposit < 5) {
+                System.out.println("The minimum amount to deposit is $5.");
+            } else {
+                account.deposit(deposit);
+                System.out.println("Deposit successful. Current balance is: $" + account.getBalance());
+                break;
+            }
+        }
+    }
+
+    private void handleWithdraw(Account account) {
+        while (true) {
+            System.out.print("Enter amount to withdraw: ");
+            if (!scanner.hasNextDouble()) {
+                System.out.println("Invalid input. Please enter a numeric value.");
+                scanner.next(); // Clear invalid input
+                continue;
+            }
+
+            double amount = scanner.nextDouble();
+            scanner.nextLine(); // Clear the newline
+
+            if (amount <= 0) {
+                System.out.println("Withdrawal amount must be positive.");
+            } else if (account.withdraw(amount)) {
+                System.out.println("Withdrawal successful. New balance: $" + account.getBalance());
+                break;
+            } else {
+                System.out.println("Insufficient funds.");
+            }
+        }
+    }
+
 
 
     private Account extractAccount(){

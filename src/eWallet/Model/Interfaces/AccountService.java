@@ -1,6 +1,7 @@
-package eWallet.Model.impl;
+package eWallet.Model.Interfaces;
 
-import eWallet.Model.Account;
+import eWallet.Model.impl.Account;
+
 
 public interface AccountService {
 

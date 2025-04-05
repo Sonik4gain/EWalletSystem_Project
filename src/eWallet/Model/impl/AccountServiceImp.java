@@ -1,12 +1,12 @@
 package eWallet.Model.impl;
-import eWallet.Model.Account;
-import eWallet.Model.EWalletSystem;
+import eWallet.Model.impl.Account;
+import eWallet.Model.impl.EWalletSystem;
+import eWallet.Model.Interfaces.AccountService;
+
 import java.util.List;
 public class AccountServiceImp implements AccountService {
 
     private static final EWalletSystem walletSystem = new EWalletSystem();
-
-
 
     @Override
     public boolean createAccount(Account account) {

@@ -1,6 +1,6 @@
 package eWallet;
 
-import eWallet.Model.ApplicationService;
+import eWallet.Model.Interfaces.ApplicationService;
 import eWallet.Model.impl.ApplicationServiceImpl;
 
 import java.util.Scanner;
